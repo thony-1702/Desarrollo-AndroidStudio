@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación: Desarrollo de Interfaces en Android Studio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3a7bd5',
+                        primaryDark: '#2a5ea0',
+                        secondary: '#00d2ff',
+                        accent: '#ff6b6b',
+                        dark: '#1e293b',
+                        light: '#f8fafc',
+                        gray: '#64748b',
+                        success: '#10b981'
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+        }
+        
+        .code-block {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .doc-section {
+            scroll-margin-top: 100px;
+        }
+        
+        .step-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .screenshot {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .screenshot-caption {
+            background-color: #f1f5f9;
+            border-radius: 0 0 8px 8px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            color: #64748b;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #3a7bd5;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .sidebar-link {
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f1f5f9;
+            border-left: 3px solid #3a7bd5;
+        }
+        
+        .sidebar-link.active {
+            background-color: #e0f2fe;
+            border-left: 3px solid #3a7bd5;
+            font-weight: 500;
+            color: #3a7bd5;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Header -->
+    <header class="gradient-bg text-white sticky top-0 z-40 shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fab fa-android text-2xl text-yellow-300"></i>
+                    <h1 class="text-xl font-bold">Documentación Android Studio</h1>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#diseno-vistas" class="nav-link text-white hover:text-yellow-300">Diseño de Vistas</a>
+                    <a href="#menu-navegacion" class="nav-link text-white hover:text-yellow-300">Menú Navegación</a>
+                    <a href="#animaciones" class="nav-link text-white hover:text-yellow-300">Animaciones</a>
+                    <a href="#archivos-navegacion" class="nav-link text-white hover:text-yellow-300">Archivos Navigation</a>
+                </nav>
+                <button class="md:hidden text-white">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <aside class="w-full md:w-64 bg-white shadow-md md:min-h-screen md:sticky md:top-16 z-30">
+            <div class="p-4 border-b">
+                <h2 class="font-bold text-lg text-gray-800">Contenido</h2>
+            </div>
+            <nav class="p-4 space-y-1">
+                <a href="#introduccion" class="block sidebar-link active px-3 py-2 rounded">Introducción</a>
+                <a href="#diseno-vistas" class="block sidebar-link px-3 py-2 rounded">1. Diseño de Vistas</a>
+                <a href="#menu-navegacion" class="block sidebar-link px-3 py-2 rounded">2. Menú de Navegación</a>
+                <a href="#animaciones" class="block sidebar-link px-3 py-2 rounded">3. Implementar Animaciones</a>
+                <a href="#archivos-navegacion" class="block sidebar-link px-3 py-2 rounded">4. Archivos de Navegación</a>
+                <a href="#conclusion" class="block sidebar-link px-3 py-2 rounded">Conclusión</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 md:p-8 bg-gray-50">
+            <!-- Introducción -->
+            <section id="introduccion" class="doc-section mb-16 bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-bold mb-4 text-primary">Introducción al Desarrollo de Interfaces en Android</h2>
+                <p class="mb-4 text-gray-700">En esta documentación se explicará el proceso completo para desarrollar interfaces de usuario en Android Studio, incluyendo:</p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li>Creación y diseño de vistas (layouts)</li>
+                    <li>Implementación de menús de navegación</li>
+                    <li>Adición de animaciones y transiciones</li>
+                    <li>Configuración de archivos de navegación</li>
+                </ul>
+                
+                <div class="bg-blue-50 border-l-4 border-primary p-4 rounded mb-6">
+                    <h3 class="font-bold text-primary mb-2">Requisitos previos</h3>
+                    <ul class="list-disc pl-5 space-y-1 text-gray-700">
+                        <li>Android Studio instalado (versión 2022.3.1 o superior)</li>
+                        <li>Conocimientos básicos de XML y Kotlin/Java</li>
+                        <li>Proyecto Android configurado con Material Components</li>
+                    </ul>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-bold mb-2 text-gray-800">Estructura del Proyecto</h3>
+                        <img src="https://developer.android.com/static/studio/images/projects/android-project-structure_2x.png" 
+                             alt="Estructura de proyecto Android"
+                             class="screenshot w-full rounded-t-lg">
+                        <div class="screenshot-caption">Estructura típica de un proyecto Android en Android Studio</div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold mb-2 text-gray-800">Componentes principales</h3>
+                        <div class="bg-white p-4 rounded-lg border">
+                            <div class="flex items-start mb-3">
+                                <div class="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-1 flex-shrink-0">
+                                    <i class="fas fa-file-alt text-xs"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">XML Layouts</h4>
+                                    <p class="text-sm text-gray-600">Definen la estructura visual de las pantallas</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start mb-3">
+                                <div class="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-1 flex-shrink-0">
+                                    <i class="fas fa-code text-xs"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Activities/Fragments</h4>
+                                    <p class="text-sm text-gray-600">Lógica asociada a cada pantalla</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-1 flex-shrink-0">
+                                    <i class="fas fa-project-diagram text-xs"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Navigation Graph</h4>
+                                    <p class="text-sm text-gray-600">Gestiona el flujo entre pantallas</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1. Diseño de Vistas -->
+            <section id="diseno-vistas" class="doc-section mb-16 bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex items-center mb-6">
+                    <div class="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 font-bold">1</div>
+                    <h2 class="text-2xl font-bold text-primary">Diseño de Vistas en Android Studio</h2>
+                </div>
+                
+                <p class="mb-6 text-gray-700">El diseño de interfaces en Android se realiza mediante archivos XML que definen la estructura visual de cada pantalla. Android Studio proporciona dos formas de trabajar:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="step-card bg-white p-5 rounded-lg border">
+                        <h3 class="font-bold mb-3 text-gray-800 flex items-center">
+                            <i class="fas fa-paint-brush text-primary mr-2"></i>
+                            Editor Visual (Design)
+                        </h3>
+                        <img src="https://developer.android.com/static/studio/images/layout-editor-design_2x.png" 
+                             alt="Editor visual de Android Studio"
+                             class="screenshot w-full mb-3 rounded-t-lg">
+                        <p class="text-gray-700 text-sm">Permite arrastrar y soltar componentes visuales y configurar sus propiedades mediante una interfaz gráfica.</p>
+                    </div>
+                    <div class="step-card bg-white p-5 rounded-lg border">
+                        <h3 class="font-bold mb-3 text-gray-800 flex items-center">
+                            <i class="fas fa-code text-primary mr-2"></i>
+                            Editor de Código (Text)
+                        </h3>
+                        <img src="https://developer.android.com/static/studio/images/layout-editor-text_2x.png" 
+                             alt="Editor de código XML en Android Studio"
+                             class="screenshot w-full mb-3 rounded-t-lg">
+                        <p class="text-gray-700 text-sm">Permite editar directamente el XML para un control preciso sobre el layout y sus propiedades.</p>
+                    </div>
+                </div>
+                
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Ejemplo práctico: Crear un layout básico</h3>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">1. Crear nuevo archivo XML</h4>
+                    <p class="mb-3 text-gray-700">En el directorio <code class="bg-gray-100 px-1 py-0.5 rounded">res/layout/</code>, crear un nuevo archivo XML (ej: <code class="bg-gray-100 px-1 py-0.5 rounded">activity_main.xml</code>).</p>
+                    <img src="https://developer.android.com/static/studio/images/layout-new-file_2x.png" 
+                         alt="Crear nuevo archivo XML"
+                         class="screenshot w-full md:w-3/4 mb-1 rounded-t-lg">
+                    <div class="screenshot-caption">Creación de un nuevo archivo de layout en Android Studio</div>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">2. Definir la estructura base</h4>
+                    <p class="mb-3 text-gray-700">Usar ConstraintLayout como contenedor principal:</p>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-green-400">&lt;!-- activity_main.xml --&gt;</span>
+<span class="text-blue-400">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
+    <span class="text-yellow-300">xmlns:android</span>=<span class="text-green-400">"http://schemas.android.com/apk/res/android"</span>
+    <span class="text-yellow-300">xmlns:app</span>=<span class="text-green-400">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="text-yellow-300">android:layout_width</span>=<span class="text-green-400">"match_parent"</span>
+    <span class="text-yellow-300">android:layout_height</span>=<span class="text-green-400">"match_parent"</span>&gt;
+
+    <span class="text-green-400">&lt;!-- Aquí irán los componentes de la interfaz --&gt;</span>
+
+<span class="text-blue-400">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span>
+</code>
+                    </pre>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">3. Añadir componentes básicos</h4>
+                    <p class="mb-3 text-gray-700">Ejemplo de TextView y Button con ConstraintLayout:</p>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-blue-400">&lt;TextView</span>
+    <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/title"</span>
+    <span class="text-yellow-300">android:layout_width</span>=<span class="text-green-400">"wrap_content"</span>
+    <span class="text-yellow-300">android:layout_height</span>=<span class="text-green-400">"wrap_content"</span>
+    <span class="text-yellow-300">android:text</span>=<span class="text-green-400">"Bienvenido"</span>
+    <span class="text-yellow-300">android:textSize</span>=<span class="text-green-400">"24sp"</span>
+    <span class="text-yellow-300">app:layout_constraintTop_toTopOf</span>=<span class="text-green-400">"parent"</span>
+    <span class="text-yellow-300">app:layout_constraintStart_toStartOf</span>=<span class="text-green-400">"parent"</span>
+    <span class="text-yellow-300">app:layout_constraintEnd_toEndOf</span>=<span class="text-green-400">"parent"</span>
+    <span class="text-yellow-300">android:layout_marginTop</span>=<span class="text-green-400">"32dp"</span> /&gt;
+
+<span class="text-blue-400">&lt;Button</span>
+    <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/actionButton"</span>
+    <span class="text-yellow-300">android:layout_width</span>=<span class="text-green-400">"wrap_content"</span>
+    <span class="text-yellow-300">android:layout_height</span>=<span class="text-green-400">"wrap_content"</span>
+    <span class="text-yellow-300">android:text</span>=<span class="text-green-400">"Continuar"</span>
+    <span class="text-yellow-300">app:layout_constraintTop_toBottomOf</span>=<span class="text-green-400">"@id/title"</span>
+    <span class="text-yellow-300">app:layout_constraintStart_toStartOf</span>=<span class="text-green-400">"parent"</span>
+    <span class="text-yellow-300">app:layout_constraintEnd_toEndOf</span>=<span class="text-green-400">"parent"</span>
+    <span class="text-yellow-300">android:layout_marginTop</span>=<span class="text-green-400">"24dp"</span> /&gt;
+</code>
+                    </pre>
+                    <img src="https://developer.android.com/static/codelabs/basic-android-kotlin-training-xml-layouts/img/2d1d5a4f4d2f1b9e_1440.png" 
+                         alt="Resultado del layout en el editor"
+                         class="screenshot w-full md:w-3/4 mb-1 rounded-t-lg">
+                    <div class="screenshot-caption">Vista previa del layout en el editor de Android Studio</div>
+                </div>
+                
+                <div class="bg-blue-50 border-l-4 border-primary p-4 rounded">
+                    <h4 class="font-bold text-primary mb-2">Consejos para diseño de vistas</h4>
+                    <ul class="list-disc pl-5 space-y-1 text-gray-700">
+                        <li>Usar <code class="bg-blue-100 px-1 py-0.5 rounded">ConstraintLayout</code> para diseños responsivos</li>
+                        <li>Definir dimensiones en <code class="bg-blue-100 px-1 py-0.5 rounded">dp</code> (density-independent pixels)</li>
+                        <li>Usar <code class="bg-blue-100 px-1 py-0.5 rounded">sp</code> para tamaños de texto</li>
+                        <li>Mantener márgenes consistentes (8dp, 16dp, 24dp, etc.)</li>
+                        <li>Extraer strings a <code class="bg-blue-100 px-1 py-0.5 rounded">res/values/strings.xml</code></li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 2. Menú de Navegación -->
+            <section id="menu-navegacion" class="doc-section mb-16 bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex items-center mb-6">
+                    <div class="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 font-bold">2</div>
+                    <h2 class="text-2xl font-bold text-primary">Creación de Menú de Navegación</h2>
+                </div>
+                
+                <p class="mb-6 text-gray-700">La Navigation Component de Android Jetpack simplifica la implementación de navegación en tu aplicación. Proporciona una forma consistente y predecible de manejar la navegación entre destinos.</p>
+                
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Pasos para implementar un menú de navegación</h3>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">1. Agregar dependencias</h4>
+                    <p class="mb-3 text-gray-700">En <code class="bg-gray-100 px-1 py-0.5 rounded">build.gradle (Module: app)</code>:</p>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-purple-400">dependencies</span> {
+    <span class="text-green-400">// Navigation Component</span>
+    <span class="text-blue-400">implementation</span> <span class="text-green-400">"androidx.navigation:navigation-fragment-ktx:2.5.3"</span>
+    <span class="text-blue-400">implementation</span> <span class="text-green-400">"androidx.navigation:navigation-ui-ktx:2.5.3"</span>
+    
+    <span class="text-green-400">// Material Components (para BottomNavigationView)</span>
+    <span class="text-blue-400">implementation</span> <span class="text-green-400">"com.google.android.material:material:1.8.0"</span>
+}
+</code>
+                    </pre>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">2. Crear el gráfico de navegación</h4>
+                    <p class="mb-3 text-gray-700">Click derecho en <code class="bg-gray-100 px-1 py-0.5 rounded">res</code> → New → Android Resource File → Tipo: Navigation</p>
+                    <img src="https://developer.android.com/static/studio/images/navigation/create-nav-graph_2x.png" 
+                         alt="Crear nuevo gráfico de navegación"
+                         class="screenshot w-full md:w-3/4 mb-1 rounded-t-lg">
+                    <div class="screenshot-caption">Creación de un nuevo archivo de navegación en Android Studio</div>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">3. Definir destinos en nav_graph.xml</h4>
+                    <p class="mb-3 text-gray-700">Añadir fragmentos/actividades como destinos en el editor de navegación:</p>
+                    <img src="https://developer.android.com/static/images/guide/navigation/navigation-graph_2x.png" 
+                         alt="Editor de gráfico de navegación"
+                         class="screenshot w-full mb-1 rounded-t-lg">
+                    <div class="screenshot-caption">Editor visual del gráfico de navegación en Android Studio</div>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">4. Implementar BottomNavigationView</h4>
+                    <p class="mb-3 text-gray-700">Añadir en el layout principal:</p>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-blue-400">&lt;com.google.android.material.bottomnavigation.BottomNavigationView</span>
+    <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/bottom_nav"</span>
+    <span class="text-yellow-300">android:layout_width</span>=<span class="text-green-400">"match_parent"</span>
+    <span class="text-yellow-300">android:layout_height</span>=<span class="text-green-400">"wrap_content"</span>
+    <span class="text-yellow-300">app:menu</span>=<span class="text-green-400">"@menu/bottom_nav_menu"</span>
+    <span class="text-yellow-300">app:layout_constraintBottom_toBottomOf</span>=<span class="text-green-400">"parent"</span>
+    <span class="text-yellow-300">app:layout_constraintStart_toStartOf</span>=<span class="text-green-400">"parent"</span>
+    <span class="text-yellow-300">app:layout_constraintEnd_toEndOf</span>=<span class="text-green-400">"parent"</span> /&gt;
+</code>
+                    </pre>
+                    
+                    <p class="mb-3 text-gray-700">Crear el archivo de menú (<code class="bg-gray-100 px-1 py-0.5 rounded">res/menu/bottom_nav_menu.xml</code>):</p>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-blue-400">&lt;menu</span> <span class="text-yellow-300">xmlns:android</span>=<span class="text-green-400">"http://schemas.android.com/apk/res/android"</span>&gt;
+    <span class="text-blue-400">&lt;item</span>
+        <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/homeFragment"</span>
+        <span class="text-yellow-300">android:icon</span>=<span class="text-green-400">"@drawable/ic_home"</span>
+        <span class="text-yellow-300">android:title</span>=<span class="text-green-400">"Inicio"</span> /&gt;
+    <span class="text-blue-400">&lt;item</span>
+        <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/searchFragment"</span>
+        <span class="text-yellow-300">android:icon</span>=<span class="text-green-400">"@drawable/ic_search"</span>
+        <span class="text-yellow-300">android:title</span>=<span class="text-green-400">"Buscar"</span> /&gt;
+    <span class="text-blue-400">&lt;item</span>
+        <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/profileFragment"</span>
+        <span class="text-yellow-300">android:icon</span>=<span class="text-green-400">"@drawable/ic_profile"</span>
+        <span class="text-yellow-300">android:title</span>=<span class="text-green-400">"Perfil"</span> /&gt;
+<span class="text-blue-400">&lt;/menu&gt;</span>
+</code>
+                    </pre>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">5. Configurar NavController en la Activity</h4>
+                    <p class="mb-3 text-gray-700">En el código Kotlin/Java de la actividad principal:</p>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-purple-400">class</span> <span class="text-blue-400">MainActivity</span> : <span class="text-blue-400">AppCompatActivity</span>() {
+    
+    <span class="text-purple-400">override fun</span> <span class="text-yellow-300">onCreate</span>(savedInstanceState: <span class="text-blue-400">Bundle</span>?) {
+        <span class="text-purple-400">super</span>.onCreate(savedInstanceState)
+        setContentView(R.layout.<span class="text-yellow-300">activity_main</span>)
+        
+        <span class="text-green-400">// Configurar Navigation</span>
+        <span class="text-purple-400">val</span> navController = findNavController(R.id.<span class="text-yellow-300">nav_host_fragment</span>)
+        <span class="text-purple-400">val</span> bottomNav = findViewById&lt;<span class="text-blue-400">BottomNavigationView</span>&gt;(R.id.<span class="text-yellow-300">bottom_nav</span>)
+        
+        <span class="text-green-400">// Conectar BottomNavigationView con NavController</span>
+        bottomNav.setupWithNavController(navController)
+    }
+}
+</code>
+                    </pre>
+                    <img src="https://developer.android.com/static/codelabs/android-navigation/img/5b8d8f8c7f8e1d6a_1440.png" 
+                         alt="Resultado del menú de navegación"
+                         class="screenshot w-full md:w-3/4 mb-1 rounded-t-lg">
+                    <div class="screenshot-caption">Menú de navegación inferior funcionando en la aplicación</div>
+                </div>
+                
+                <div class="bg-blue-50 border-l-4 border-primary p-4 rounded">
+                    <h4 class="font-bold text-primary mb-2">Tipos de menús de navegación</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-white p-3 rounded border">
+                            <h5 class="font-medium mb-1 flex items-center">
+                                <i class="fas fa-window-restore text-primary mr-2"></i>
+                                Bottom Navigation
+                            </h5>
+                            <p class="text-sm text-gray-600">Ideal para 3-5 destinos principales. Usa <code class="bg-blue-100 px-1 py-0.5 rounded text-xs">BottomNavigationView</code>.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded border">
+                            <h5 class="font-medium mb-1 flex items-center">
+                                <i class="fas fa-bars text-primary mr-2"></i>
+                                Navigation Drawer
+                            </h5>
+                            <p class="text-sm text-gray-600">Para muchas opciones. Usa <code class="bg-blue-100 px-1 py-0.5 rounded text-xs">DrawerLayout</code> y <code class="bg-blue-100 px-1 py-0.5 rounded text-xs">NavigationView</code>.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded border">
+                            <h5 class="font-medium mb-1 flex items-center">
+                                <i class="fas fa-ellipsis-h text-primary mr-2"></i>
+                                Tabs
+                            </h5>
+                            <p class="text-sm text-gray-600">Para contenido relacionado. Usa <code class="bg-blue-100 px-1 py-0.5 rounded text-xs">TabLayout</code> con <code class="bg-blue-100 px-1 py-0.5 rounded text-xs">ViewPager2</code>.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Animaciones -->
+            <section id="animaciones" class="doc-section mb-16 bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex items-center mb-6">
+                    <div class="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 font-bold">3</div>
+                    <h2 class="text-2xl font-bold text-primary">Implementación de Animaciones</h2>
+                </div>
+                
+                <p class="mb-6 text-gray-700">Las animaciones mejoran la experiencia de usuario haciendo que las transiciones entre estados sean más fluidas y agradables. Android ofrece varios tipos de animaciones:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-white p-4 rounded-lg border">
+                        <h3 class="font-bold mb-2 text-gray-800 flex items-center">
+                            <i class="fas fa-sliders-h text-purple-500 mr-2"></i>
+                            Property Animation
+                        </h3>
+                        <p class="text-sm text-gray-600">Animar propiedades de objetos (alpha, traslación, escala, rotación).</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border">
+                        <h3 class="font-bold mb-2 text-gray-800 flex items-center">
+                            <i class="fas fa-exchange-alt text-blue-500 mr-2"></i>
+                            Transiciones
+                        </h3>
+                        <p class="text-sm text-gray-600">Cambios entre actividades o fragmentos con efectos visuales.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border">
+                        <h3 class="font-bold mb-2 text-gray-800 flex items-center">
+                            <i class="fas fa-share-alt text-green-500 mr-2"></i>
+                            Shared Elements
+                        </h3>
+                        <p class="text-sm text-gray-600">Elementos compartidos entre pantallas con animación.</p>
+                    </div>
+                </div>
+                
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Ejemplo: Animación de fade in</h3>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">1. Crear archivo de animación</h4>
+                    <p class="mb-3 text-gray-700">En <code class="bg-gray-100 px-1 py-0.5 rounded">res/anim/fade_in.xml</code>:</p>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-blue-400">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="text-blue-400">&lt;set</span> <span class="text-yellow-300">xmlns:android</span>=<span class="text-green-400">"http://schemas.android.com/apk/res/android"</span>
+    <span class="text-yellow-300">android:interpolator</span>=<span class="text-green-400">"@android:anim/decelerate_interpolator"</span>&gt;
+    
+    <span class="text-blue-400">&lt;alpha</span>
+        <span class="text-yellow-300">android:fromAlpha</span>=<span class="text-green-400">"0.0"</span>
+        <span class="text-yellow-300">android:toAlpha</span>=<span class="text-green-400">"1.0"</span>
+        <span class="text-yellow-300">android:duration</span>=<span class="text-green-400">"500"</span> /&gt;
+<span class="text-blue-400">&lt;/set&gt;</span>
+</code>
+                    </pre>
+                    <img src="https://developer.android.com/static/studio/images/res-animation_2x.png" 
+                         alt="Crear archivo de animación"
+                         class="screenshot w-full md:w-3/4 mb-1 rounded-t-lg">
+                    <div class="screenshot-caption">Creación de un nuevo archivo de animación en Android Studio</div>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">2. Aplicar la animación en código</h4>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-purple-400">val</span> fadeIn = AnimationUtils.loadAnimation(<span class="text-purple-400">this</span>, R.anim.<span class="text-yellow-300">fade_in</span>)
+myView.startAnimation(fadeIn)
+</code>
+                    </pre>
+                </div>
+                
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Ejemplo: Transición entre actividades</h3>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">1. Definir transiciones</h4>
+                    <p class="mb-3 text-gray-700">En <code class="bg-gray-100 px-1 py-0.5 rounded">res/transition/slide_right.xml</code>:</p>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-blue-400">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="text-blue-400">&lt;slide</span> <span class="text-yellow-300">xmlns:android</span>=<span class="text-green-400">"http://schemas.android.com/apk/res/android"</span>
+    <span class="text-yellow-300">android:slideEdge</span>=<span class="text-green-400">"right"</span>
+    <span class="text-yellow-300">android:duration</span>=<span class="text-green-400">"300"</span> /&gt;
+</code>
+                    </pre>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">2. Configurar transiciones en las actividades</h4>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-green-400">// En la actividad origen</span>
+<span class="text-purple-400">val</span> intent = Intent(<span class="text-purple-400">this</span>, <span class="text-blue-400">DetailActivity</span>::<span class="text-purple-400">class</span>.java)
+startActivity(intent)
+overridePendingTransition(R.anim.<span class="text-yellow-300">slide_in_right</span>, R.anim.<span class="text-yellow-300">slide_out_left</span>)
+
+<span class="text-green-400">// En la actividad destino (al cerrar)</span>
+<span class="text-purple-400">override fun</span> <span class="text-yellow-300">finish</span>() {
+    <span class="text-purple-400">super</span>.finish()
+    overridePendingTransition(R.anim.<span class="text-yellow-300">slide_in_left</span>, R.anim.<span class="text-yellow-300">slide_out_right</span>)
+}
+</code>
+                    </pre>
+                    <img src="https://developer.android.com/static/images/training/animation/transitions-custom.gif" 
+                         alt="Ejemplo de transición entre actividades"
+                         class="screenshot w-full md:w-3/4 mb-1 rounded-t-lg">
+                    <div class="screenshot-caption">Transición personalizada entre actividades</div>
+                </div>
+                
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Ejemplo: Animación de elementos compartidos</h3>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">1. Definir transición de elementos compartidos</h4>
+                    <p class="mb-3 text-gray-700">En <code class="bg-gray-100 px-1 py-0.5 rounded">res/transition/shared_element.xml</code>:</p>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-blue-400">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="text-blue-400">&lt;transitionSet</span> <span class="text-yellow-300">xmlns:android</span>=<span class="text-green-400">"http://schemas.android.com/apk/res/android"</span>&gt;
+    <span class="text-blue-400">&lt;changeBounds</span> /&gt;
+    <span class="text-blue-400">&lt;changeTransform</span> /&gt;
+    <span class="text-blue-400">&lt;changeClipBounds</span> /&gt;
+    <span class="text-blue-400">&lt;changeImageTransform</span> /&gt;
+<span class="text-blue-400">&lt;/transitionSet&gt;</span>
+</code>
+                    </pre>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">2. Configurar en ambas actividades</h4>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-green-400">// En el estilo de la aplicación</span>
+<span class="text-blue-400">&lt;item</span> <span class="text-yellow-300">name</span>=<span class="text-green-400">"android:windowSharedElementsUseOverlay"</span>&gt;<span class="text-green-400">false</span><span class="text-blue-400">&lt;/item&gt;</span>
+<span class="text-blue-400">&lt;item</span> <span class="text-yellow-300">name</span>=<span class="text-green-400">"android:windowContentTransitions"</span>&gt;<span class="text-green-400">true</span><span class="text-blue-400">&lt;/item&gt;</span>
+
+<span class="text-green-400">// En la actividad origen</span>
+<span class="text-purple-400">val</span> intent = Intent(<span class="text-purple-400">this</span>, <span class="text-blue-400">DetailActivity</span>::<span class="text-purple-400">class</span>.java)
+<span class="text-purple-400">val</span> options = ActivityOptions.makeSceneTransitionAnimation(
+    <span class="text-purple-400">this</span>,
+    Pair(myImageView, <span class="text-green-400">"imageTransition"</span>)
+)
+startActivity(intent, options.toBundle())
+
+<span class="text-green-400">// En la actividad destino</span>
+<span class="text-purple-400">class</span> <span class="text-blue-400">DetailActivity</span> : <span class="text-blue-400">AppCompatActivity</span>() {
+    <span class="text-purple-400">override fun</span> <span class="text-yellow-300">onCreate</span>(savedInstanceState: <span class="text-blue-400">Bundle</span>?) {
+        <span class="text-purple-400">super</span>.onCreate(savedInstanceState)
+        setContentView(R.layout.<span class="text-yellow-300">activity_detail</span>)
+        
+        <span class="text-green-400">// Asignar transition name al elemento compartido</span>
+        detailImageView.transitionName = <span class="text-green-400">"imageTransition"</span>
+        
+        <span class="text-green-400">// Posponer transición hasta que la imagen esté cargada</span>
+        postponeEnterTransition()
+        detailImageView.doOnPreDraw {
+            startPostponedEnterTransition()
+        }
+    }
+}
+</code>
+                    </pre>
+                    <img src="https://developer.android.com/static/images/training/animation/shared-elements_2x.png" 
+                         alt="Animación de elementos compartidos"
+                         class="screenshot w-full md:w-3/4 mb-1 rounded-t-lg">
+                    <div class="screenshot-caption">Animación de elementos compartidos entre actividades</div>
+                </div>
+                
+                <div class="bg-blue-50 border-l-4 border-primary p-4 rounded">
+                    <h4 class="font-bold text-primary mb-2">Buenas prácticas para animaciones</h4>
+                    <ul class="list-disc pl-5 space-y-1 text-gray-700">
+                        <li>Mantener las animaciones breves (200-500ms)</li>
+                        <li>Usar interpoladores naturales (decelerate, accelerate)</li>
+                        <li>Evitar animaciones simultáneas complejas</li>
+                        <li>Probar en dispositivos de gama baja</li>
+                        <li>Considerar desactivar animaciones cuando la batería esté baja</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 4. Archivos de Navegación -->
+            <section id="archivos-navegacion" class="doc-section mb-16 bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex items-center mb-6">
+                    <div class="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 font-bold">4</div>
+                    <h2 class="text-2xl font-bold text-primary">Archivos de Navegación (Navigation)</h2>
+                </div>
+                
+                <p class="mb-6 text-gray-700">Los archivos de navegación (navigation graphs) son archivos XML que definen todos los destinos posibles en tu aplicación y las conexiones entre ellos. Centralizan toda la lógica de navegación en un solo lugar.</p>
+                
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Estructura de un archivo de navegación</h3>
+                
+                <div class="mb-6">
+                    <img src="https://developer.android.com/static/images/guide/navigation/navigation-graph_2x.png" 
+                         alt="Estructura de archivo de navegación"
+                         class="screenshot w-full mb-1 rounded-t-lg">
+                    <div class="screenshot-caption">Visualización del gráfico de navegación en Android Studio</div>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">Componentes principales</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-white p-4 rounded-lg border">
+                            <h5 class="font-bold mb-2 text-gray-800 flex items-center">
+                                <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>
+                                Destinos
+                            </h5>
+                            <p class="text-sm text-gray-600">Puntos de entrada en tu app (Activities, Fragments, etc.)</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border">
+                            <h5 class="font-bold mb-2 text-gray-800 flex items-center">
+                                <i class="fas fa-arrow-right text-green-500 mr-2"></i>
+                                Acciones
+                            </h5>
+                            <p class="text-sm text-gray-600">Conexiones lógicas entre destinos</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border">
+                            <h5 class="font-bold mb-2 text-gray-800 flex items-center">
+                                <i class="fas fa-code text-purple-500 mr-2"></i>
+                                Argumentos
+                            </h5>
+                            <p class="text-sm text-gray-600">Datos que se pasan entre destinos</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Ejemplo completo de nav_graph.xml</h3>
+                
+                <div class="mb-6">
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-blue-400">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="text-blue-400">&lt;navigation</span> <span class="text-yellow-300">xmlns:android</span>=<span class="text-green-400">"http://schemas.android.com/apk/res/android"</span>
+    <span class="text-yellow-300">xmlns:app</span>=<span class="text-green-400">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="text-yellow-300">xmlns:tools</span>=<span class="text-green-400">"http://schemas.android.com/tools"</span>
+    <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/nav_graph"</span>
+    <span class="text-yellow-300">app:startDestination</span>=<span class="text-green-400">"@id/homeFragment"</span>&gt;
+
+    <span class="text-green-400">&lt;!-- Fragmento Home --&gt;</span>
+    <span class="text-blue-400">&lt;fragment</span>
+        <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/homeFragment"</span>
+        <span class="text-yellow-300">android:name</span>=<span class="text-green-400">"com.example.app.ui.home.HomeFragment"</span>
+        <span class="text-yellow-300">android:label</span>=<span class="text-green-400">"Inicio"</span>
+        <span class="text-yellow-300">tools:layout</span>=<span class="text-green-400">"@layout/fragment_home"</span>&gt;
+        
+        <span class="text-green-400">&lt;!-- Acción hacia el fragmento de detalles --&gt;</span>
+        <span class="text-blue-400">&lt;action</span>
+            <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/action_home_to_detail"</span>
+            <span class="text-yellow-300">app:destination</span>=<span class="text-green-400">"@id/detailFragment"</span> /&gt;
+    <span class="text-blue-400">&lt;/fragment&gt;</span>
+
+    <span class="text-green-400">&lt;!-- Fragmento de Detalles --&gt;</span>
+    <span class="text-blue-400">&lt;fragment</span>
+        <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/detailFragment"</span>
+        <span class="text-yellow-300">android:name</span>=<span class="text-green-400">"com.example.app.ui.detail.DetailFragment"</span>
+        <span class="text-yellow-300">android:label</span>=<span class="text-green-400">"Detalles"</span>
+        <span class="text-yellow-300">tools:layout</span>=<span class="text-green-400">"@layout/fragment_detail"</span>&gt;
+        
+        <span class="text-green-400">&lt;!-- Argumento recibido --&gt;</span>
+        <span class="text-blue-400">&lt;argument</span>
+            <span class="text-yellow-300">android:name</span>=<span class="text-green-400">"itemId"</span>
+            <span class="text-yellow-300">app:argType</span>=<span class="text-green-400">"integer"</span> /&gt;
+        
+        <span class="text-green-400">&lt;!-- Acción de regreso al home --&gt;</span>
+        <span class="text-blue-400">&lt;action</span>
+            <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/action_detail_to_home"</span>
+            <span class="text-yellow-300">app:destination</span>=<span class="text-green-400">"@id/homeFragment"</span>
+            <span class="text-yellow-300">app:popUpTo</span>=<span class="text-green-400">"@id/homeFragment"</span>
+            <span class="text-yellow-300">app:popUpToInclusive</span>=<span class="text-green-400">"false"</span> /&gt;
+    <span class="text-blue-400">&lt;/fragment&gt;</span>
+
+    <span class="text-green-400">&lt;!-- Actividad de Login --&gt;</span>
+    <span class="text-blue-400">&lt;activity</span>
+        <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/loginActivity"</span>
+        <span class="text-yellow-300">android:name</span>=<span class="text-green-400">"com.example.app.ui.login.LoginActivity"</span>
+        <span class="text-yellow-300">android:label</span>=<span class="text-green-400">"Login"</span>
+        <span class="text-yellow-300">tools:layout</span>=<span class="text-green-400">"@layout/activity_login"</span> /&gt;
+
+<span class="text-blue-400">&lt;/navigation&gt;</span>
+</code>
+                    </pre>
+                </div>
+                
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Uso del NavController</h3>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">Navegación básica entre destinos</h4>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-green-400">// Navegar usando una acción definida en el grafo</span>
+findNavController().navigate(R.id.<span class="text-yellow-300">action_home_to_detail</span>)
+
+<span class="text-green-400">// Navegar directamente a un destino</span>
+findNavController().navigate(R.id.<span class="text-yellow-300">detailFragment</span>)
+
+<span class="text-green-400">// Navegar con argumentos</span>
+<span class="text-purple-400">val</span> bundle = bundleOf(<span class="text-green-400">"itemId"</span> to 123)
+findNavController().navigate(R.id.<span class="text-yellow-300">action_home_to_detail</span>, bundle)
+
+<span class="text-green-400">// Navegar usando Safe Args (recomendado)</span>
+<span class="text-purple-400">val</span> direction = HomeFragmentDirections.actionHomeToDetail(itemId = 123)
+findNavController().navigate(direction)
+</code>
+                    </pre>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2 text-gray-800">Configuración del NavHost</h4>
+                    <p class="mb-3 text-gray-700">En el layout de la actividad principal:</p>
+                    <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm mb-3">
+<code class="code-block">
+<span class="text-blue-400">&lt;androidx.fragment.app.FragmentContainerView</span>
+    <span class="text-yellow-300">android:id</span>=<span class="text-green-400">"@+id/nav_host_fragment"</span>
+    <span class="text-yellow-300">android:name</span>=<span class="text-green-400">"androidx.navigation.fragment.NavHostFragment"</span>
+    <span class="text-yellow-300">android:layout_width</span>=<span class="text-green-400">"match_parent"</span>
+    <span class="text-yellow-300">android:layout_height</span>=<span class="text-green-400">"match_parent"</span>
+    <span class="text-yellow-300">app:defaultNavHost</span>=<span class="text-green-400">"true"</span>
+    <span class="text-yellow-300">app:navGraph</span>=<span class="text-green-400">"@navigation/nav_graph"</span> /&gt;
+</code>
+                    </pre>
+                </div>
+                
+                <div class="bg-blue-50 border-l-4 border-primary p-4 rounded">
+                    <h4 class="font-bold text-primary mb-2">Mejores prácticas para archivos de navegación</h4>
+                    <ul class="list-disc pl-5 space-y-1 text-gray-700">
+                        <li>Usar Safe Args para pasar datos entre destinos de forma segura</li>
+                        <li>Mantener el grafo de navegación modularizado</li>
+                        <li>Definir un destino de inicio claro</li>
+                        <li>Usar deep links para navegación desde notificaciones</li>
+                        <li>Probar todos los flujos de navegación</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Conclusión -->
+            <section id="conclusion" class="doc-section bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-bold mb-4 text-primary">Conclusión</h2>
+                <p class="mb-4 text-gray-700">En esta documentación hemos cubierto los aspectos fundamentales del desarrollo de interfaces en Android Studio:</p>
+                
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Diseño de vistas</strong> mediante archivos XML y los editores de Android Studio</li>
+                    <li><strong>Implementación de menús de navegación</strong> usando Navigation Component</li>
+                    <li><strong>Adición de animaciones</strong> para mejorar la experiencia de usuario</li>
+                    <li><strong>Configuración de archivos de navegación</strong> para gestionar el flujo de la aplicación</li>
+                </ul>
+                
+                <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded mb-6">
+                    <h3 class="font-bold text-green-700 mb-2">Recursos adicionales</h3>
+                    <ul class="list-disc pl-5 space-y-1 text-gray-700">
+                        <li><a href="https://developer.android.com/guide/navigation" class="text-primary hover:underline">Documentación oficial de Navigation Component</a></li>
+                        <li><a href="https://developer.android.com/training/animation" class="text-primary hover:underline">Guía de animaciones en Android</a></li>
+                        <li><a href="https://material.io/design/navigation/" class="text-primary hover:underline">Principios de navegación en Material Design</a></li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white border rounded-lg p-4">
+                    <h3 class="font-bold mb-3 text-gray-800">Próximos pasos</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-blue-50 p-3 rounded border border-blue-100">
+                            <h4 class="font-medium mb-1 flex items-center">
+                                <i class="fas fa-paint-brush text-blue-500 mr-2"></i>
+                                Jetpack Compose
+                            </h4>
+                            <p class="text-sm text-gray-600">El moderno toolkit para construir interfaces declarativas.</p>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded border border-purple-100">
+                            <h4 class="font-medium mb-1 flex items-center">
+                                <i class="fas fa-mobile-alt text-purple-500 mr-2"></i>
+                                Responsive Design
+                            </h4>
+                            <p class="text-sm text-gray-600">Adaptar interfaces para tablets y pantallas grandes.</p>
+                        </div>
+                        <div class="bg-green-50 p-3 rounded border border-green-100">
+                            <h4 class="font-medium mb-1 flex items-center">
+                                <i class="fas fa-tachometer-alt text-green-500 mr-2"></i>
+                                Performance UI
+                            </h4>
+                            <p class="text-sm text-gray-600">Optimizar el rendimiento de las interfaces.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Activar enlaces del sidebar al hacer scroll
+        const sections = document.querySelectorAll('.doc-section');
+        const navLinks = document.querySelectorAll('.sidebar-link');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Smooth scrolling para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
